@@ -33,8 +33,11 @@ table(glm.pred3, Direction[!train])
 mean(glm.pred3 == Direction[!train])
 
 library(MASS)
-lda.fit = lda(Direction~Lag2, data=Weekly, subset=train)
-lda.pred = predict(lda.fit, data.frame(Lag2=Lag2[!train]), type="response")$class
+lda.fit = lda(Direction~poly(Lag2+Lag3,2), data=Weekly, subset=train)
+lda.pred = predict(lda.fit, data.frame(Lag2=Lag2[!train]
+                                       ,Lag3=Lag3[!train]
+                                       ), 
+                   type="response")$class
 table(lda.pred, Direction[!train])
 mean(lda.pred == Direction[!train])
 
@@ -43,14 +46,16 @@ qda.pred = predict(qda.fit, data.frame(Lag2=Lag2[!train]), type="response")
 table(qda.pred$class, Direction[!train])
 mean(qda.pred$class == Direction[!train])
 
-train.X = as.matrix(Lag2[train])
-test.X = as.matrix(Lag2[!train])
+train.X = scale(as.matrix(Weekly[train,2]))
+test.X = scale(as.matrix(Weekly[!train,2]))
 train.Y = Direction[train]
 test.Y = Direction[!train]
 
 library(class)
 ?knn
 set.seed(1)
-knn.pred = knn(train.X, test.X, train.Y, k=1)
+knn.pred = knn(train.X, test.X, train.Y, k=3)
 table(knn.pred, test.Y)
 mean(knn.pred == test.Y)
+
+var(train.X)
