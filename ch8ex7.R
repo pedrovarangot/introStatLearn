@@ -29,7 +29,7 @@ for(mtry in mtryes) {
 }
 
 ggplot(data = results, mapping = aes(x = ntrees, y = terror, color = mtry)) +
-  #geom_errorbar(mapping = aes(ymin = terror-.33*tsd, ymax = terror+.33*tsd),
+  #geom_errorbar(mapping = aes(ymin = terror-tsd/10, ymax = terror+tsd/10),
   #              width = 10) +
   geom_line() + 
   geom_point(shape = 4)
